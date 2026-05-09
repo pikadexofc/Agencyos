@@ -11,9 +11,16 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
-import { IconButton } from '@/src/components/ui';
 
-export const Sidebar = ({ className }: { className?: string }) => {
+export const Sidebar = ({ 
+  className, 
+  activeTab = 'radar', 
+  onTabChange 
+}: { 
+  className?: string;
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+}) => {
   return (
     <div className={cn("w-20 md:w-64 h-full border-r border-white/[0.03] bg-black flex flex-col pt-6 pb-6", className)}>
       {/* Brand & Command */}
@@ -40,10 +47,31 @@ export const Sidebar = ({ className }: { className?: string }) => {
 
       {/* Navigation */}
       <div className="flex-1 flex flex-col gap-1 px-3 md:px-4">
-        <NavItem icon={LayoutDashboard} label="Execution Radar" isActive />
-        <NavItem icon={Inbox} label="Communications" badge="3" />
-        <NavItem icon={Activity} label="System Telemetry" />
-        <NavItem icon={Users} label="Operator Health" />
+        <NavItem 
+          icon={LayoutDashboard} 
+          label="Execution Radar" 
+          isActive={activeTab === 'radar'} 
+          onClick={() => onTabChange?.('radar')} 
+        />
+        <NavItem 
+          icon={Inbox} 
+          label="Communications" 
+          badge="3" 
+          isActive={activeTab === 'communications'} 
+          onClick={() => onTabChange?.('communications')} 
+        />
+        <NavItem 
+          icon={Activity} 
+          label="System Telemetry" 
+          isActive={activeTab === 'telemetry'} 
+          onClick={() => onTabChange?.('telemetry')} 
+        />
+        <NavItem 
+          icon={Users} 
+          label="Operator Health" 
+          isActive={activeTab === 'health'} 
+          onClick={() => onTabChange?.('health')} 
+        />
         
         <div className="my-4 h-px w-full bg-white/[0.02]" />
         
@@ -68,11 +96,14 @@ export const Sidebar = ({ className }: { className?: string }) => {
   );
 };
 
-const NavItem = ({ icon: Icon, label, isActive, badge, isActiveAI }: any) => (
-  <button className={cn(
-    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group",
-    isActive ? "bg-white/[0.04] text-zinc-100" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.02]"
-  )}>
+const NavItem = ({ icon: Icon, label, isActive, badge, isActiveAI, onClick }: any) => (
+  <button 
+    onClick={onClick}
+    className={cn(
+      "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group",
+      isActive ? "bg-white/[0.08] text-zinc-100 shadow-[0_0_20px_rgba(255,255,255,0.02)]" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.02]"
+    )}
+  >
     <div className={cn(
       "shrink-0",
       isActiveAI ? "text-indigo-400" : (isActive ? "text-zinc-200" : "text-zinc-500 group-hover:text-zinc-300")
